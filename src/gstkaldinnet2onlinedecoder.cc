@@ -1028,7 +1028,12 @@ static std::string gst_kaldinnet2onlinedecoder_full_final_result_to_json(
     json_object_set_new(result_json_object, "hypotheses", nbest_json_arr);
   }
 
-  char *ret_strings = json_dumps(root, JSON_REAL_PRECISION(6));
+  size_t json_output_flags = 0;
+#if (JANSSON_MAJOR_VERSION > 2 || (JANSSON_MAJOR_VERSION == 2 && JANSSON_MINOR_VERSION >= 7))
+  json_output_flags = JSON_REAL_PRECISION(6);
+#endif
+
+  char *ret_strings = json_dumps(root, json_output_flags);
 
   json_decref( root );
   std::string result;
